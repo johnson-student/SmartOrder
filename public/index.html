@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SmartOrder · Accounts</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>SmartOrder</h1>
+      <p>Local workspace · Profiles & accounts</p>
+    </header>
+    <main>
+      <p id="message" role="status" aria-live="polite"></p>
+      <section id="setup" class="hidden">
+        <h2>Create your first owner account</h2>
+        <p class="muted">
+          One-time setup. Choose your own credentials; no default password is installed.
+        </p>
+        <form id="setupForm">
+          <label>
+            Name
+            <input name="name" required minlength="2" maxlength="100" autocomplete="name" />
+          </label>
+          <label>
+            Email
+            <input name="email" type="email" required autocomplete="email" />
+          </label>
+          <label>
+            Password
+            <input
+              name="password"
+              type="password"
+              required
+              minlength="10"
+              maxlength="128"
+              autocomplete="new-password"
+            />
+          </label>
+          <button>Create owner</button>
+        </form>
+      </section>
+      <section id="login" class="hidden">
+        <h2>Welcome back</h2>
+        <form id="loginForm">
+          <label>
+            Email
+            <input name="email" type="email" required autocomplete="username" />
+          </label>
+          <label>
+            Password
+            <input name="password" type="password" required autocomplete="current-password" />
+          </label>
+          <button>Log in</button>
+        </form>
+      </section>
+      <div id="workspace" class="hidden">
+        <p>
+          <span id="identity"></span>
+          <button id="logout" class="secondary">Log out</button>
+        </p>
+        <div class="grid">
+          <section>
+            <h2>My profile</h2>
+            <p class="muted">View and edit your personal details.</p>
+            <form id="profileForm">
+              <label>
+                Name
+                <input name="name" required minlength="2" maxlength="100" />
+              </label>
+              <label>
+                Email
+                <input name="email" type="email" required />
+              </label>
+              <label>
+                Phone
+                <input name="phone" type="tel" maxlength="25" />
+              </label>
+              <button>Save profile</button>
+            </form>
+          </section>
+          <section id="createAccount" class="hidden">
+            <h2>Add an account</h2>
+            <form id="accountForm">
+              <label>
+                Name
+                <input name="name" required minlength="2" maxlength="100" />
+              </label>
+              <label>
+                Email
+                <input name="email" type="email" required />
+              </label>
+              <label>
+                Initial password
+                <input
+                  name="password"
+                  type="password"
+                  required
+                  minlength="10"
+                  maxlength="128"
+                  autocomplete="new-password"
+                />
+              </label>
+              <label>
+                Role
+                <select name="role">
+                  <option value="restaurant_staff">Restaurant staff</option>
+                  <option value="kitchen_staff">Kitchen staff</option>
+                  <option value="owner">Owner (administrator)</option>
+                </select>
+              </label>
+              <button>Create account</button>
+            </form>
+          </section>
+        </div>
+        <section id="accounts" class="hidden">
+          <h2>Manage accounts</h2>
+          <p class="muted">
+            Owners can edit details, change roles, and deactivate accounts. The final active owner
+            is protected.
+          </p>
+          <div id="accountList"></div>
+        </section>
+      </div>
+    </main>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "smartorder-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local SmartOrder profile and account management backend",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node test/backend.test.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "3.6.2"
+  }
+}
