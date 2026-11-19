@@ -46,6 +46,9 @@ export function sendError(response, error) {
   if (error.message?.includes('UNIQUE constraint failed: users.email')) {
     return sendJson(response, 409, { error: 'That email is already in use.' });
   }
+  if (error.message?.includes('UNIQUE constraint failed: menu_items.name')) {
+    return sendJson(response, 409, { error: 'A menu item with that name already exists.' });
+  }
   if (!error.status) console.error(error);
   sendJson(response, error.status || 500, {
     error: error.status ? error.message : 'Unexpected server error.',

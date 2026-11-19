@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node src/server.js",
-    "test": "node test/backend.test.js",
+    "test": "node test/backend.test.js && node test/menu.test.js",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

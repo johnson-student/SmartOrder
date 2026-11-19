@@ -7,6 +7,8 @@ import { createUserRepository } from './repositories/users.js';
 import { createSessions } from './sessions.js';
 import { createAuthController } from './controllers/auth.js';
 import { createUserController } from './controllers/users.js';
+import { createMenuRepository } from './repositories/menu.js';
+import { createMenuController } from './controllers/menu.js';
 import { checkOrigin, sendJson, sendError, fail } from './http.js';
 
 const projectRoot = fileURLToPath(new URL('../', import.meta.url));
@@ -14,6 +16,12 @@ const staticFiles = {
   '/': ['index.html', 'text/html; charset=utf-8'],
   '/styles.css': ['styles.css', 'text/css; charset=utf-8'],
   '/app.js': ['app.js', 'text/javascript; charset=utf-8'],
+  '/menu': ['menu.html', 'text/html; charset=utf-8'],
+  '/menu.js': ['menu.js', 'text/javascript; charset=utf-8'],
+  '/menu.css': ['menu.css', 'text/css; charset=utf-8'],
+    '/order': ['order.html', 'text/html; charset=utf-8'],
+  '/order.js': ['order.js', 'text/javascript; charset=utf-8'],
+  '/order.css': ['order.css', 'text/css; charset=utf-8'],
 };
 
 export function createApp({
@@ -25,12 +33,16 @@ export function createApp({
   const sessions = createSessions(db, users, { secureCookie });
   const auth = createAuthController(users, sessions);
   const accounts = createUserController(users, sessions);
+  const menuItems = createMenuRepository(db);
+  const menu = createMenuController(menuItems);
 
   const publicRoutes = {
     'GET /api/health': (request, response) => sendJson(response, 200, { status: 'ok' }),
     'GET /api/setup': auth.setupStatus,
     'POST /api/setup': auth.setup,
     'POST /api/auth/login': auth.login,
+    'GET /api/menu': menu.list,
+    'POST /api/menu/check': menu.check,
   };
   const protectedRoutes = {
     'POST /api/auth/logout': auth.logout,
@@ -38,6 +50,8 @@ export function createApp({
     'PATCH /api/me': accounts.updateProfile,
     'GET /api/users': accounts.list,
     'POST /api/users': accounts.create,
+    'GET /api/menu/manage': menu.manageList,
+    'POST /api/menu': menu.create,
   };
 
   async function handleRequest(request, response) {
@@ -53,11 +67,15 @@ export function createApp({
           'Content-Type': contentType,
           'X-Content-Type-Options': 'nosniff',
           'X-Frame-Options': 'DENY',
-          'Content-Security-Policy': "default-src 'self'; frame-ancestors 'none'",
+          'Content-Security-Policy':
+            "default-src 'self'; img-src 'self' https:; frame-ancestors 'none'",
         });
         return response.end(content);
       }
       if (publicRoutes[routeKey]) return await publicRoutes[routeKey](request, response);
+      const menuRoute = path.match(/^\/api\/menu\/(\d+)$/);
+      if (request.method === 'GET' && menuRoute)
+        return menu.detail(request, response, Number(menuRoute[1]));
 
       const session = sessions.authenticate(request);
       if (protectedRoutes[routeKey]) {
@@ -67,6 +85,10 @@ export function createApp({
       if (request.method === 'PATCH' && accountRoute) {
         return await accounts.update(request, response, session, Number(accountRoute[1]));
       }
+      if (menuRoute && request.method === 'PATCH')
+        return await menu.update(request, response, session, Number(menuRoute[1]));
+      if (menuRoute && request.method === 'DELETE')
+        return menu.remove(request, response, session, Number(menuRoute[1]));
       fail(404, 'Route not found.');
     } catch (error) {
       sendError(response, error);

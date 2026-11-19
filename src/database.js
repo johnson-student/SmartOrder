@@ -28,6 +28,18 @@ export function openDatabase(dbPath) {
       user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       expires INTEGER NOT NULL
     );
+
+        CREATE TABLE IF NOT EXISTS menu_items (
+      id INTEGER PRIMARY KEY,
+      name TEXT NOT NULL UNIQUE COLLATE NOCASE,
+      description TEXT NOT NULL DEFAULT '',
+      category TEXT NOT NULL,
+      price_cents INTEGER NOT NULL CHECK(price_cents > 0),
+      image_url TEXT NOT NULL DEFAULT '',
+      available INTEGER NOT NULL DEFAULT 1 CHECK(available IN (0, 1)),
+      active INTEGER NOT NULL DEFAULT 1 CHECK(active IN (0, 1)),
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
   `);
 
   return db;

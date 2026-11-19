@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SmartOrder · Order</title>
+    <link rel="stylesheet" href="/order.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="wrap">
+        <p class="brand">SmartOrder</p>
+        <h1>What are you craving today?</h1>
+        <p class="lead">
+          Pick your dishes, check your order, and we will confirm everything is available.
+        </p>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div class="wrap toolbar-inner">
+        <input id="search" type="search" placeholder="Search dishes" aria-label="Search dishes" />
+        <div id="chips" class="chips" role="group" aria-label="Categories"></div>
+      </div>
+    </div>
+
+    <main class="wrap">
+      <p id="notice" class="notice hidden" role="status" aria-live="polite"></p>
+      <div id="state" class="state hidden"></div>
+      <div id="grid" class="grid"></div>
+    </main>
+
+    <button id="cartButton" class="cart-button hidden" aria-haspopup="dialog">
+      <span id="cartCount" class="count">0</span>
+      <span>View order</span>
+      <strong id="cartTotal">$0.00</strong>
+    </button>
+
+    <dialog id="detail" class="sheet"></dialog>
+    <dialog id="cart" class="sheet"></dialog>
+    <script src="/order.js" defer></script>
+  </body>
+</html>
