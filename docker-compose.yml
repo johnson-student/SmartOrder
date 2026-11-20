@@ -1,0 +1,58 @@
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-SmartQR_Root_Local_2026!}"
+      MYSQL_DATABASE: smartqr
+      MYSQL_USER: smartqr_user
+      MYSQL_PASSWORD: "${DB_PASSWORD:-SmartQR_Local_2026!}"
+    ports:
+      - "3306:3306"
+    volumes:
+      - smartqr_mysql:/var/lib/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      FRONTEND_URL: http://localhost:5173
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: smartqr
+      DB_USER: smartqr_user
+      DB_PASSWORD: "${DB_PASSWORD:-SmartQR_Local_2026!}"
+      JWT_SECRET: "${JWT_SECRET:-local_only_change_this_secret_before_deployment_123456}"
+    ports:
+      - "3000:3000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: ["sh", "-c", "npm run db:migrate && exec npm run dev"]
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:3000/api/v1
+      VITE_SOCKET_URL: http://localhost:3000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  smartqr_mysql:

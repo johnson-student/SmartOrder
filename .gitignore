@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+logs/
+*.log
+
+# Secrets: never commit these
+.env
+.env.*
+!.env.example
+
+.DS_Store
+.vscode/

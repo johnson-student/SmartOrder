@@ -1,0 +1,101 @@
+@import 'tailwindcss';
+
+/* SmartQR design tokens.
+   ink = text, lagoon = brand + primary actions, paper = page background,
+   saffron / leaf / brick = order status colours. */
+@theme {
+  --color-ink: #16222a;
+  --color-ink-soft: #4a5b63;
+  --color-lagoon: #0b7a75;
+  --color-lagoon-dark: #085e5a;
+  --color-lagoon-tint: #dff1ef;
+  --color-paper: #f2f6f5;
+  --color-saffron: #b86e00;
+  --color-saffron-tint: #fbeccf;
+  --color-leaf: #2f7d32;
+  --color-leaf-tint: #dcefdc;
+  --color-brick: #b8412f;
+  --color-brick-tint: #f6dcd7;
+  --color-line: #d6e0de;
+  --font-sans:
+    'Avenir Next', 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue',
+    sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-lagoon);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  button,
+  [role='button'],
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* The one distinctive element: a kitchen ticket. Header, perforated line, items. */
+.ticket {
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
+}
+.ticket-perf {
+  position: relative;
+  border-top: 2px dashed var(--color-line);
+}
+.ticket-perf::before,
+.ticket-perf::after {
+  content: '';
+  position: absolute;
+  top: -9px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-paper);
+  border: 1px solid var(--color-line);
+}
+.ticket-perf::before {
+  left: -9px;
+  clip-path: inset(0 0 0 50%);
+}
+.ticket-perf::after {
+  right: -9px;
+  clip-path: inset(0 50% 0 0);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .flash-new {
+    animation: flash-new 1.6s ease-out 1;
+  }
+  @keyframes flash-new {
+    from {
+      box-shadow: 0 0 0 4px var(--color-saffron-tint);
+    }
+    to {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+}
